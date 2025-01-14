@@ -1,0 +1,94 @@
+﻿@model StriveFitWebsite.Models.Schedule
+
+@{
+    ViewData["Title"] = "Create";
+    
+    Layout = "~/Views/Shared/HomeLayout.cshtml";
+
+}
+<div class="content" style="background-color:#151515">
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg spad" data-setbg="/HomeDesign/img/about-bread.jpg">
+        <div class="container">
+            <div class="row"> 
+                <div class="col-lg-12">
+                    <div class="breadcrumb-text">
+                        <h2>About Us</h2>
+                        <div class="breadcrumb-controls">
+                            <a asp-action="Index" asp-controller="Home"><i class="fa fa-home"></i> Home</a>
+                            <span>About Us</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb End -->
+    <h1>Create</h1>
+
+    <h4>Schedule</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label>Trainer</label>
+                    <input type="text" class="form-control" value="@ViewBag.TrainerName" readonly />
+                    <input type="hidden" asp-for="Trainerid" value="@ViewBag.TrainerId" />
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Starttime" class="control-label"></label>
+                    <input asp-for="Starttime" class="form-control" />
+                    <span asp-validation-for="Starttime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Endtime" class="control-label"></label>
+                    <input asp-for="Endtime" class="form-control" />
+                    <span asp-validation-for="Endtime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Trainingid" class="control-label">Training</label>
+                    <select asp-for="Trainingid" class="form-control" asp-items="ViewBag.Trainingid"></select>
+                    <span asp-validation-for="Trainingid" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Capacity" class="control-label"></label>
+                    <input asp-for="Capacity" class="form-control" />
+                    <span asp-validation-for="Capacity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Goal" class="control-label"></label>
+                    <input asp-for="Goal" class="form-control" />
+                    <span asp-validation-for="Goal" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Lectuerstime" class="control-label"></label>
+                    <input asp-for="Lectuerstime" class="form-control" />
+                    <span asp-validation-for="Lectuerstime" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Exercisroutine" class="control-label"></label>
+                    <input asp-for="Exercisroutine" class="form-control" />
+                    <span asp-validation-for="Exercisroutine" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Classtype" class="control-label"></label>
+                    <input asp-for="Classtype" class="form-control" />
+                    <span asp-validation-for="Classtype" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

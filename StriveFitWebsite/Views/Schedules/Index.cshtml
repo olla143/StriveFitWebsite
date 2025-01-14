@@ -1,0 +1,77 @@
+﻿@model IEnumerable<StriveFitWebsite.Models.Schedule>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/HomeLayout.cshtml";
+}
+<div class="content" style="background-color:#151515">
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg spad" data-setbg="/HomeDesign/img/about-bread.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="breadcrumb-text">
+                        <h2>About Us</h2>
+                        <div class="breadcrumb-controls">
+                            <a asp-action="Index" asp-controller="Home"><i class="fa fa-home"></i> Home</a>
+                            <span>About Us</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb End -->
+    <h1 class="white-text">Your Schedules</h1>
+
+    <p>
+        <a asp-action="Create" class="white-text">Create New</a>
+    </p>
+    <table class="table white-text">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Starttime)</th>
+                <th>@Html.DisplayNameFor(model => model.Endtime)</th>
+                <th>@Html.DisplayNameFor(model => model.Schedulestatus)</th>
+                <th>@Html.DisplayNameFor(model => model.Capacity)</th>
+                <th>@Html.DisplayNameFor(model => model.Goal)</th>
+                <th>@Html.DisplayNameFor(model => model.Lectuerstime)</th>
+                <th>@Html.DisplayNameFor(model => model.Exercisroutine)</th>
+                <th>@Html.DisplayNameFor(model => model.Classtype)</th>
+                <th>@Html.DisplayNameFor(model => model.Trainer)</th>
+                <th>@Html.DisplayNameFor(model => model.Training)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Starttime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Endtime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Schedulestatus)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Capacity)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Goal)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Lectuerstime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Exercisroutine)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Classtype)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Trainer.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Training.Trainingtypename)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Scheduleid" >Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Scheduleid" >Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Scheduleid" >Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<style>
+    .white-text {
+        color: white;
+    }
+
+</style>
+ 

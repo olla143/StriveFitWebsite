@@ -1,0 +1,375 @@
+﻿@model StriveFitWebsite.Models.ViewModels.HomePageViewModel
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Views/Shared/HomeLayout.cshtml";
+}
+
+<!-- Hero Section Begin -->
+<section class="hero-section">
+    <div class="hero-items owl-carousel">
+        @foreach (var hero in Model.Homepages.Where(h => h.Sectionname.StartsWith("slider")))
+        {
+            <div class="single-hero-item set-bg" data-setbg="@Url.Content("~/Images/" + hero.Imageurl)" asp-append-version="true">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="hero-text">
+                                <h2>@hero.Headings</h2>
+                                <h1>@hero.Descriptions</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Hero End -->
+<!-- Feature Section Begin -->
+<section class="feature-section">
+    <div class="container-fluid">
+        <div class="row">
+            @foreach (var classes in Model.Homepages.Where(c => c.Sectionname == "class1" || c.Sectionname == "class2"))
+            {
+                <div class="col-md-6">
+                    <div class="feature-item set-bg" data-setbg="@Url.Content("~/Images/" + classes.Imageurl)" asp-append-version="true">
+                        <h3>@classes.Headings</h3>
+                        <p>@classes.Descriptions</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+
+<!-- Feature Section End -->
+<!-- About Section Begin -->
+<section class="home-about spad">
+    <div class="container">
+        <div class="row">
+            @foreach (var welcome in Model.Homepages)
+            {
+                if (welcome.Sectionname == "welcome"){
+                    <div class="col-lg-6">
+                        <div class="about-text">
+
+                            <h2>@welcome.Headings</h2>
+                            <p class="short-details">
+                                @welcome.Descriptions
+                            </p>
+                            <p class="long-details">
+                                @welcome.Details
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="about-img">
+                            <img src=@Url.Content("~/Images/" + welcome.Imageurl) asp-append-version="true" alt="">
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
+<!-- Classes Section Begin -->
+<section class="classes-section">
+   
+    @foreach (var programs in Model.Homepages.Where(p => p.Sectionname == "programs1"))
+    {
+        <div class="class-title set-bg" data-setbg="@Url.Content("~/Images/" + programs.Imageurl)" asp-append-version="true">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-7 m-auto text-center">
+                        <div class="section-title pl-lg-4 pr-lg-4 pl-0 pr-0">
+                            <h2>@programs.Headings</h2>
+                            <p>@programs.Descriptions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="container-fluid">
+        <div class="row">
+           
+            @foreach (var programs in Model.Homepages.Where(p => p.Sectionname.StartsWith("programs") && p.Sectionname != "programs1"))
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="classes-item set-bg" data-setbg="@Url.Content("~/Images/" + programs.Imageurl)" asp-append-version="true">
+                        <h4>@programs.Headings</h4>
+                        <p>@programs.Descriptions</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Classes Section End -->
+<!-- Class Time Section Begin -->
+<section class="classtime-section class-time-table spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="section-title">
+                    <h2>Classtime Table</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="timetable-controls">
+                    <ul>
+                        <li class="active" data-tsfilter="all">all class</li>
+                        <li data-tsfilter="crossfit">crossfit</li>
+                        <li data-tsfilter="lunge">lunge ball</li>
+                        <li data-tsfilter="ppsr">ppsr</li>
+                        <li data-tsfilter="walls">walls</li>
+                        <li data-tsfilter="candy">candy</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="classtime-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                        <th>Sunday</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="workout-time">10.00</td>
+                        <td class="hover-bg ts-item" data-tsmeta="crossfit">
+                            <span>10.00 - 14.00</span>
+                            <h6>Crossfit lv1</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="crossfit">
+                            <span>10.00 - 15.00</span>
+                            <h6>Crossfit lv1</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="lunge">
+                            <span>10.00 - 13.00</span>
+                            <h6>Lunge Ball Bur</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="lunge">
+                            <span>10.00 - 13.30</span>
+                            <h6>Lunge Ball Bur</h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="workout-time">14.00</td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="lunge">
+                            <span>14.00 - 17.00</span>
+                            <h6>Lunge Ball Bur</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="crossfit">
+                            <span>14.00 - 17.00</span>
+                            <h6>Crossfit lv1</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="walls">
+                            <span>14.00 - 15.30</span>
+                            <h6>Walls to Knees</h6>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="workout-time">16.00</td>
+                        <td class="hover-bg ts-item" data-tsmeta="lunge">
+                            <span>16.00 - 18.00</span>
+                            <h6>Lunge Ball Bur</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="candy">
+                            <span>16.00 - 19.00</span>
+                            <h6>Candy</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="candy">
+                            <span>16.00 - 19.00</span>
+                            <h6>Candy</h6>
+                        </td>
+                        <td class="hover-bg ts-item" data-tsmeta="ppsr">
+                            <span>16.00 - 17.00</span>
+                            <h6>Ppsr</h6>
+                        </td>
+                        <td class="hover-bg ts-item" data-tsmeta="murph">
+                            <span>16.00 - 20.00</span>
+                            <h6>murph</h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="workout-time">18.00</td>
+                        <td class="hover-bg ts-item" data-tsmeta="walls">
+                            <span>18.00 - 20.00</span>
+                            <h6>Walls to Knees</h6>
+                        </td>
+                        <td class="hover-bg ts-item" data-tsmeta="ppsr">
+                            <span>18.00 - 20.00</span>
+                            <h6>ppsr</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="chelsea">
+                            <span>18.00 - 22.00</span>
+                            <h6>Chelsea</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="annie">
+                            <span>18.00 - 22.00</span>
+                            <h6>annie</h6>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="workout-time">20.00</td>
+                        <td class="hover-bg ts-item" data-tsmeta="lunge">
+                            <span>21.00 - 23.00</span>
+                            <h6>Lunge Ball Bur</h6>
+                        </td>
+                        <td class="hover-bg ts-item" data-tsmeta="walls">
+                            <span>20.00 - 22.00</span>
+                            <h6>Walls to Knees</h6>
+                        </td>
+                        <td class="hover-bg ts-item" data-tsmeta="walls">
+                            <span>20.30 - 23.00</span>
+                            <h6>Walls to Knees</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="crossfit">
+                            <span>22.00 - 23.00</span>
+                            <h6>Crossfit Lv2</h6>
+                        </td>
+                        <td></td>
+                        <td class="hover-bg ts-item" data-tsmeta="crossfit">
+                            <span>21.00 - 23.00</span>
+                            <h6>Crossfit Lv2</h6>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+<!-- Class Time Section End -->
+<!-- Price Plan Section Begin -->
+<section class="price-section spad set-bg" data-setbg="/HomeDesign/img/price-bg.jpg">
+    <div class="container">
+        <!-- Message Display -->
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-info">
+                @TempData["Message"]
+            </div>
+        }
+        <!-- End Message Display -->
+        @foreach (var pricingPlan in Model.Homepages.Where(p => p.Sectionname == "plan"))
+        {
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>@pricingPlan.Headings</h2>
+                        <p>@pricingPlan.Descriptions</p>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row">
+            
+                @foreach (var plan in Model.plans)
+                {
+                
+                    <div class="col-lg-4">
+                        <div class="single-price-plan">
+                            <h4>@plan.Planname</h4>
+                            <div class="price-plan">
+                                <h2>@plan.Price <span>JD</span></h2>
+                                <p>Monthly</p>
+                            </div>
+                            <ul>
+                                @foreach (var feature in plan.Features)
+                                {
+                                    <li>@feature</li>
+                                }
+                            </ul>
+                            <a class="primary-btn price-btn"
+                               asp-action="CheckPlan"
+                               asp-controller="Subscriptions"
+                               asp-route-price="@plan.Price"
+                               asp-route-planName="@plan.Planname">Get Started</a>
+                        </div>
+                    </div>
+                
+                }
+               
+        
+        </div>
+</section>
+<!-- Price Plan Section End -->
+<!-- Choseus Section Begin -->
+<section class="chooseus-section spad">
+    <div class="container">
+        <!-- Main Section: 'why' -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    @foreach (var special in Model.Homepages.Where(h => h.Sectionname == "why"))
+                    {
+                        <h2>@special.Headings</h2>
+                        <p>@special.Descriptions</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Subsections: 'why1', 'why2', etc. -->
+        <div class="row">
+            @foreach (var special in Model.Homepages.Where(h => h.Sectionname.StartsWith("why") && h.Sectionname != "why"))
+            {
+                <div class="col-lg-4 col-sm-6">
+                    <div class="choose-item">
+                        <img src="@Url.Content("~/Images/" + special.Imageurl)" asp-append-version="true" alt="@special.Headings">
+                        <h5>@special.Headings</h5>
+                        <p>@special.Descriptions</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Choseus Section End -->
+<!-- Video Section Begin -->
+<section class="video-section set-bg" data-setbg="/HomeDesign/img/video-bg.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="video-text">
+                    <h2>Gym In Amman</h2>
+                    <a href="https://www.youtube.com/watch?v=g_bMfP6_TOw" class="play-btn video-popup">
+                        <i class="fa fa-play"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Video Section End -->

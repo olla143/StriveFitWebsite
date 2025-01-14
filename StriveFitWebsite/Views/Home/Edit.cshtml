@@ -1,0 +1,92 @@
+﻿@model StriveFitWebsite.Models.User
+@{
+    ViewData["Title"] = "Edit Profile Page";
+    Layout = "~/Views/Shared/HomeLayout.cshtml";
+}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg spad" data-setbg="/HomeDesign/img/about-bread.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-text">
+                    <h2>About Us</h2>
+                    <div class="breadcrumb-controls">
+                        <a asp-action="Index" asp-controller="Home"><i class="fa fa-home"></i> Home</a>
+                        <span>Contact Us</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb End -->
+<!-- Edit Profile Section Begin -->
+<section class="contact-section spad">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar Information -->
+            <div class="col-lg-3">
+                <div style="color: white;">
+                    <h4 style="color:white">Editing Information</h4>
+                    <ul>
+                        <li><i class="fa fa-info-circle"></i> Changes will update your profile instantly.</li>
+                        <li><i class="fa fa-check-circle"></i> Make sure to use a valid email address.</li>
+                        <li><i class="fa fa-upload"></i> You can upload a new profile picture.</li>
+                    </ul>
+                </div>
+                <div style="color: white;">
+                    <h4 style="color:white">Tips</h4>
+                    <ul>
+                        <li><i class="fa fa-lightbulb-o"></i> Use a strong and unique name for better recognition.</li>
+                        <li><i class="fa fa-balance-scale"></i> Ensure your balance details are accurate.</li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            <!-- Edit Form Section -->
+            <div class="col-lg-8 offset-lg-1">
+                <div class="contact-form">
+                    <h4>Edit Profile</h4>
+                    <form asp-action="Update" asp-controller="Home" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="Name">Name</label>
+                                    <input type="text" class="form-control" id="Name" name="Name" value="@Model.Name" required />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="Balance">Balance</label>
+                                    <input type="number" class="form-control" id="Balance" name="Balance" value="@Model.Balance" />
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label asp-for="ImageFile" class="control-label">Profile Picture</label>
+                                    <input asp-for="ImageFile" type="file" class="form-control" />
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                    <input asp-for="Userid" type="hidden" />
+
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <button type="submit" class="btn btn-primary c-btn">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Edit Profile Section End -->

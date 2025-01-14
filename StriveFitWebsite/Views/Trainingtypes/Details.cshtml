@@ -1,0 +1,33 @@
+﻿@model StriveFitWebsite.Models.Trainingtype
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+<div class="content">
+    <h1>Details</h1>
+
+    <div>
+        <h4>Trainingtype</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Trainingtypename)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Trainingtypename)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Isactive)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Isactive)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Trainingtypeid">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>

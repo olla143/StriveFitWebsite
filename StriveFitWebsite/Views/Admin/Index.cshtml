@@ -1,0 +1,255 @@
+﻿@model List<StriveFitWebsite.Models.Subscription>
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+<div class="content">
+
+    <!-- Sale & Revenue Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-6 col-xl-3">
+                <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fa fa-chart-line fa-3x text-primary"></i>
+                    <div class="ms-3">
+                        <p class="mb-2">Number of Members</p>
+                        <h6 class="mb-0">@ViewBag.MemberCount</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                    <div class="ms-3">
+                        <p class="mb-2">Number of Trainers</p>
+                        <h6 class="mb-0">@ViewBag.TrainerCount</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fa fa-chart-area fa-3x text-primary"></i>
+                    <div class="ms-3">
+                        <p class="mb-2">Active Subscriptions</p>
+                        <h6 class="mb-0">@ViewBag.ActiveSubscriptionCount</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="bg-secondary rounded d-flex align-items-center justify-content-between p-4">
+                    <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                    <div class="ms-3">
+                        <p class="mb-2">Total Revenue</p>
+                        <h6 class="mb-0">@ViewBag.TotalRevenue</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Sale & Revenue End -->
+    <!-- Sales Chart Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <!-- Monthly Subscription Chart -->
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">Monthly Subscriptions</h6>
+                    </div>
+                    <canvas id="monthly-subscriptions"></canvas>
+                    <!-- Display monthly subscription data as text -->
+                    <div class="text-start mt-3">
+                        <p><strong>Total Monthly Subscriptions:</strong></p>
+                        <ul>
+                            @for (int i = 0; i < ViewBag.Months.Count; i++)
+                            {
+                                <li>@ViewBag.Months[i]: @ViewBag.MonthlyCounts[i] subscriptions</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annual Subscription Chart -->
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">Annual Subscriptions</h6>
+                    </div>
+                    <canvas id="annualChart"></canvas>
+                    <!-- Display annual subscription data as text -->
+                    <div class="text-start mt-3">
+                        <p><strong>Total Annual Subscriptions:</strong></p>
+                        <ul>
+                            @for (int i = 0; i < ViewBag.Years.Count; i++)
+                            {
+                                <li>@ViewBag.Years[i]: @ViewBag.AnnualCounts[i] subscriptions</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sales Chart End -->
+    <!-- Recent Sales Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="bg-secondary text-center rounded p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Search for subscriptions</h6>
+            </div>
+            <!-- Search Form -->
+            <form id="searchForm">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" class="form-control" id="startDate" name="startDate" />
+                    </div>
+                    <div class="col-md-4">
+                        <label for="endDate">End Date</label>
+                        <input type="date" class="form-control" id="endDate" name="endDate" />
+                    </div>
+                    <div class="col-md-4 align-self-end">
+                        <button type="button" class="btn btn-primary w-100" id="searchButton">Search</button>
+                    </div>
+                </div>
+            </form>
+            <div id="subscriptionsTableContainer">
+                <div class="table-responsive">
+                    <table class="table text-start align-middle table-bordered table-hover mb-0">
+                        <thead>
+                            <tr class="text-white">
+                                <th scope="col">User</th>
+                                <th scope="col">Plan</th>
+                                <th scope="col">Renewal Status</th>
+                                <th scope="col">Payment Status</th>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var subscription in Model)
+                            {
+                                <tr>
+                                    <td>@subscription.User.Name</td>
+                                    <td>@subscription.Plan.Planname</td>
+                                    <td>@subscription.Renewalstatus</td>
+                                    <td>@subscription.Paymentstatus</td>
+                                    <td>@subscription.Startdate.ToString("dd MMM yyyy")</td>
+                                    <td>@subscription.Enddate.ToString("dd MMM yyyy")</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Recent Sales End -->
+    <!-- Widgets Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+
+            <div class="col-sm-12 col-md-6 col-xl-4">
+                <div class="h-100 bg-secondary rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">Calender</h6>
+                        <a href="">Show All</a>
+                    </div>
+                    <div id="calender"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Widgets End -->
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    const ctx = document.getElementById('monthly-subscriptions');
+
+    const months = @Html.Raw(Json.Serialize(ViewBag.Months));
+    const monthlyCounts = @Html.Raw(Json.Serialize(ViewBag.MonthlyCounts));
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'Subscriptions',
+                data: monthlyCounts,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    const annualCtx = document.getElementById('annualChart').getContext('2d');
+
+    // Get data from ViewBag
+    const years = @Html.Raw(Json.Serialize(ViewBag.Years));
+    const annualCounts = @Html.Raw(Json.Serialize(ViewBag.AnnualCounts));
+
+    new Chart(annualCtx, {
+        type: 'bar',
+        data: {
+            labels: years,
+            datasets: [{
+                label: 'Subscriptions',
+                data: annualCounts,
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    //click on search button
+    $(document).ready(function () {
+          $('#searchButton').on('click', function () {
+              var startDate = $('#startDate').val();
+              var endDate = $('#endDate').val();
+
+              $.ajax({
+                  url: '@Url.Action("SearchSubscriptions", "Admin")',
+                  type: 'POST',
+                  data: {
+                      startDate: startDate,
+                      endDate: endDate
+                  },
+                  success: function (response) {
+                      // Update the table and charts with the new data
+                      $('#subscriptionsTableContainer').html(response);
+                      updateCharts(); // Function to update charts (we'll define it next)
+                  },
+                  error: function () {
+                      alert('Error searching subscriptions');
+                  }
+              });
+          });
+
+          
+      });
+</script>

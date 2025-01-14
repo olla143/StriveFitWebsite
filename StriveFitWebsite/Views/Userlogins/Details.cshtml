@@ -1,0 +1,58 @@
+﻿@model StriveFitWebsite.Models.Userlogin
+
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+<div class="content">
+    <h1>Details</h1>
+
+    <div>
+        <h4>Userlogin</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Username)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Username)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Passwordhash)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Passwordhash)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Lastlogin)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Lastlogin)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Isactive)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Isactive)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Role)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Role.Rolename)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.Name)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Loginid">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>

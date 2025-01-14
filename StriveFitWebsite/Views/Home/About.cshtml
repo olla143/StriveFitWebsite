@@ -1,0 +1,199 @@
+﻿@model StriveFitWebsite.Models.ViewModels.AboutPageViewModel
+@{
+    ViewData["Title"] = "About Us Page";
+    Layout = "~/Views/Shared/HomeLayout.cshtml";
+}
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg spad" data-setbg="/HomeDesign/img/about-bread.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-text">
+                    <h2>About Us</h2>
+                    <div class="breadcrumb-controls">
+                        <a asp-action="Index" asp-controller="Home"><i class="fa fa-home"></i> Home</a>
+                        <span>About Us</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb End -->
+<!-- Aboutus Section Begin -->
+<section class="aboutus-section spad">
+    <div class="container">
+        <div class="aboutus-page-text">
+            @foreach (var items in Model.AboutusPage)
+            {
+                if (items.Subheading == "who"){
+                    <div class="row">
+                        <div class="col-xl-9 col-lg-10 m-auto">
+                            <div class="section-title">
+                                <h2>@items.Title</h2>
+                                <p>
+                                    @items.Descriptions
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <img src=@Url.Content("~/Images/" + items.Imageurl) asp-append-version="true"/>
+                }
+            }
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="about-us">
+                        @foreach (var item in Model.AboutusPage)
+                        {
+                            if (item.Subheading == "aboutus")
+                            {
+                                <h4>@item.Title</h4>
+                                <p>
+                                    @item.Descriptions
+                                </p>
+                            }
+
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="about-quality">
+                        @foreach (var quality in Model.AboutusPage)
+                        {
+                            if (quality.Subheading == "quality")
+                            {
+                                <h4>@quality.Title</h4>
+
+                                <p>
+                                    @quality.Descriptions
+                                </p>
+                            }
+                            <ul>
+                                @if (quality.Subheading == "one")
+                                {
+                                    <li>
+                                        <i class="fa fa-check-circle-o"></i>@quality.Descriptions
+                                    </li>
+                                }
+                                @if (quality.Subheading == "two")
+                                {
+                                    <li>
+                                        <i class="fa fa-check-circle-o"></i> @quality.Descriptions
+                                    </li>
+                                }
+                                @if (quality.Subheading == "three")
+                                {
+                                    <li>
+                                        <i class="fa fa-check-circle-o"></i>@quality.Descriptions
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Aboutus Section End -->
+<!-- Testimonial Section End -->
+<section class="testimonial-section set-bg spad" data-setbg="/HomeDesign/img/testimonial-bg.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-10 offset-lg-1">
+                <div class="testimonial-slider owl-carousel">
+                    @foreach (var item in Model.Testimonials.Where(t => t.Status == "Approved"))
+                    {
+                        <div class="ts-item">
+                            <div class="rating">
+                                @for (var j = 1; j <= (item.Rating ?? 0); j++)
+                                {
+                                    <i class="fa fa-star"></i>
+                                }
+                            </div>
+                            <h4>@item.Content</h4>
+                            <div class="author-name">
+                                <h5>@item.Member.Name</h5>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section spad">
+    <div class="container">
+        <div class="row">
+            @if (ViewBag.IsLoggedIn)
+            {
+                <div class="contact-form">
+                    <h4>Write Your Feedback</h4>
+                    <form asp-action="SubmitFeedback" asp-controller="Testimonials">
+                        <textarea name="Content" placeholder="Message"></textarea>
+                        <div>
+                            <label for="Rating">Rating:</label>
+                            <select name="Rating">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="c-btn">Send Your Feedback</button>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <p>Please <a asp-action="Login" asp-controller="LoginAndRegister">log in</a> to send feedback.</p>
+            }
+        </div>
+    </div>
+</section>
+<!-- Testimonial Section End -->
+<!-- Trainer Section Begin -->
+<section class="trainer-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    @foreach (var trainer in Model.AboutusPage)
+                    {
+                        if (trainer.Subheading == "trainer")
+                        {
+                            <h2>@trainer.Title</h2>
+                            <p>@trainer.Descriptions</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            @foreach (var trainer in Model.Trainers)
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <div class="trainer-item">
+                        <div class="ti-pic">
+                            <img src="@Url.Content("~/Images/" + trainer.ImagePath)" alt="@trainer.Name">
+                            <div class="ti-links">
+                                <a href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a>
+                                <a href="https://www.pinterest.com/"><i class="fa fa-pinterest"></i></a>
+                                <a href="https://www.linkedin.com/"><i class="fa fa-linkedin"></i></a>
+                            </div>
+                            <div class="trainer-text">
+                                <h5>@trainer.Name <span>- Trainer</span></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- Trainer Section End -->

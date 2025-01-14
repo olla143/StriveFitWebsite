@@ -1,0 +1,61 @@
+﻿@model StriveFitWebsite.Models.Subscription
+
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+<div class="content">
+    <h1>Delete</h1>
+
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>Subscription</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Renewalstatus)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Renewalstatus)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Paymentstatus)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Paymentstatus)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Startdate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Startdate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Enddate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Enddate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Plan)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Plan.Planname)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.User)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.User.Name)
+            </dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Subscriptionid" />
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <a asp-action="Index">Back to List</a>
+        </form>
+    </div>
+</div>

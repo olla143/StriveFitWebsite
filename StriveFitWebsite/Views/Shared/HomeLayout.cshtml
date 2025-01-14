@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Activitar Template">
+    <meta name="keywords" content="Activitar, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Strive Fit</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/HomeDesign/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/HomeDesign/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/HomeDesign/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/HomeDesign/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="~/HomeDesign/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/HomeDesign/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/HomeDesign/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/HomeDesign/css/style.css" type="text/css">
+</head>
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+    <header class="header-section">
+        <div class="container-fluid">
+            <div class="logo">
+                <a asp-action="Index" asp-controller="Home">
+                    <img src="~/images/logoFitness.png" width="190" height="121" alt="">
+                </a>
+            </div>
+            <div class="top-social">
+            </div>
+            <div class="container">
+                <div class="nav-menu">
+                    <nav class="mainmenu mobile-menu">
+                        <ul>
+                            <li class="active"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                            <li><a asp-action="About" asp-controller="Home">About us</a></li>
+                            <li><a asp-action="Contact" asp-controller="Home">Contact us</a></li>
+                            <li><a asp-action="Schedule" asp-controller="Home">Schedule</a></li>
+                            @if (ViewBag.IsLoggedIn)
+                            {
+
+                                <li><a asp-action="Profile" asp-controller="Home">Profile</a></li>
+
+                                <!-- Show Logout button if logged in -->
+                                <li><a asp-action="Logout" asp-controller="LoginAndRegister">Logout</a></li>
+                            }
+                            else
+                            {
+                                <!-- Show Login button if not logged in -->
+                                <li><a asp-action="Login" asp-controller="LoginAndRegister">Login</a></li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div id="mobile-menu-wrap"></div>
+        </div>
+    </header>
+    <!-- Header End -->
+
+    <div>
+        @RenderBody()
+    </div>
+    <!-- Map Section Begin -->
+    <div class="map">
+        @* <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d188618.51311104256!2d-71.236572!3d42.381647!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1576756626784!5m2!1sen!2sbd" height="590" style="border: 0" allowfullscreen=""></iframe> *@
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3383.9249730290576!2d35.91220092452919!3d31.99004927400248!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x151c9f8f3e60d9ff%3A0xd7498db15a35f361!2sSky%20Gym!5e0!3m2!1sar!2sjo!4v1736020151383!5m2!1sar!2sjo" height="590" style="border: 0" allowfullscreen=""></iframe>
+        <div class="map-contact-detalis">
+            <div class="open-time">
+                <h5>Weekday:</h5>
+                <ul>
+                    <li>Weekday: <span>06:30 - 11:00</span></li>
+                    <li>Friday: <span>09:00 - 18:00</span></li>
+                    <li>Saturday: <span>07:00 - 22:00</span></li>
+                </ul>
+            </div>
+            <div class="map-contact-form">
+                <h5>Contact Us</h5>
+                <form action="#">
+                    <input type="text" placeholder="Name">
+                    <input type="email" class="email" placeholder="Email">
+                    <textarea placeholder="Message"></textarea>
+                    <button type="submit" class="site-btn">Submit Now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Map Section End -->
+    <!-- Footer Section Begin -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="footer-logo-item">
+                        <div class="f-logo">
+                            <a href="#"><img src="~/images/logoFitness.png" width="190" height="121" alt=""></a>
+                        </div>
+                        <p>
+                            Fitness is not just about hitting the gym; it's about a lifestyle dedicated to health, strength, and well-being.
+                        </p>
+                        <div class="social-links">
+                            <h6>Follow us</h6>
+                            <a href="https://www.facebook.com/"><i class="fa fa-facebook"></i></a>
+                            <a href="https://www.linkedin.com/"><i class="fa fa-linkedin"></i></a>
+                            <a href="https://www.instagram.com/"><i class="fa fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h5>Program</h5>
+                        <ul class="workout-program">
+                            <li><a href="#">Bodybuilding</a></li>
+                            <li><a href="#">Running</a></li>
+                            <li><a href="#">Streching</a></li>
+                            <li><a href="#">Weight Loss</a></li>
+                            <li><a href="#">Gym Fitness</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="footer-widget">
+                        <h5>Get Info</h5>
+                        <ul class="footer-info">
+                            <li>
+                                <i class="fa fa-phone"></i>
+                                <span>Phone:</span>
+                                (+962) 079-852-3690
+                            </li>
+                            <li>
+                                <i class="fa fa-envelope-o"></i>
+                                <span>Email:</span>
+                                StriveFit@gmail.com
+                            </li>
+                            <li>
+                                <i class="fa fa-map-marker"></i>
+                                <span>Address</span>
+                                Al-Madinah St, Amman, Jordan
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-text">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <div class="ct-inside">
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">StriveFit</a>
+                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer Section End -->
+    <!-- Js Plugins -->
+    <script src="~/HomeDesign/js/jquery-3.3.1.min.js"></script>
+    <script src="~/HomeDesign/js/bootstrap.min.js"></script>
+    <script src="~/HomeDesign/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/HomeDesign/js/mixitup.min.js"></script>
+    <script src="~/HomeDesign/js/jquery.nice-select.min.js"></script>
+    <script src="~/HomeDesign/js/jquery.slicknav.js"></script>
+    <script src="~/HomeDesign/js/owl.carousel.min.js"></script>
+    <script src="~/HomeDesign/js/masonry.pkgd.min.js"></script>
+    <script src="~/HomeDesign/js/main.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

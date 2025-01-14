@@ -1,0 +1,48 @@
+﻿@model IEnumerable<StriveFitWebsite.Models.Testimonial>
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+
+<div class="content">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Member Name</th>
+                <th>Feedback</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var testimonial in Model)
+            {
+                <tr>
+                    <td>@testimonial.Member.Name</td>
+                    <td>@testimonial.Content</td>
+                    <td>@testimonial.Status</td>
+                    <td>
+                        @if (testimonial.Status == "Pending")
+                        {
+                            <form method="post" asp-action="ApproveTestimonial" asp-route-testimonialId="@testimonial.Testimonialid">
+                                <button type="submit">Approve</button>
+                            </form>
+                            <form method="post" asp-action="RejectTestimonial" asp-route-testimonialId="@testimonial.Testimonialid">
+                                <button type="submit">Reject</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <span>@testimonial.Status</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>

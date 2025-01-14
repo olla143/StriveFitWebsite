@@ -1,0 +1,86 @@
+﻿@model StriveFitWebsite.Models.ViewModels.ContactPageViewModel
+
+@{
+    ViewData["Title"] = "Contact Us Page";
+    Layout = "~/Views/Shared/HomeLayout.cshtml";
+}
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg spad" data-setbg="/HomeDesign/img/about-bread.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb-text">
+                    <h2>Contact Us</h2>
+                    <div class="breadcrumb-controls">
+                        <a asp-action="Index" asp-controller="Home"><i class="fa fa-home"></i> Home</a>
+                        <span>Contact Us</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb End -->
+<!-- Contact Section Begin -->
+<section class="contact-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                @foreach (var info in Model.Contactpages.Where(x => x.Title == "Information"))
+                {
+                    <div class="contact-info">
+                        <h4>@info.Title</h4>
+                        <ul>
+                            @foreach (var contact in Model.Contactpages)
+                            {
+                                if (contact.Title == "Phone")
+                                {
+                                    <li><i class="fa fa-phone"></i>(+962) 079-852-3690</li>
+                                }
+                                if (contact.Title == "Email")
+                                {
+                                    <li><i class="fa fa-envelope"></i>StriveFit@gmail.com</li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div class="contact-address">
+                        @foreach (var contact in Model.Contactpages.Where(x => x.Title == "Address"))
+                        {
+                            <h4>@contact.Title</h4>
+                            <ul>
+                                <li><i class="fa fa-map-marker"></i> @contact.Contentvalue</li>
+                            </ul>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="col-lg-8 offset-lg-1">
+                <div class="contact-form">
+                    @foreach (var contact in Model.Contactpages.Where(x => x.Title == "Get in touch"))
+                    {
+                        <h4>@contact.Title</h4>
+                        <form action="#">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input type="text" placeholder="Name">
+                                </div>
+                                <div class="col-lg-6">
+                                    <input type="text" placeholder="Email">
+                                </div>
+                                <div class="col-lg-12">
+                                    <textarea placeholder="Message"></textarea>
+                                    <button type="submit" class="c-btn">@contact.Contentvalue</button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- Contact Section End -->

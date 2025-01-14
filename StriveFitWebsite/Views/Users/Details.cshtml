@@ -1,0 +1,51 @@
+﻿@model StriveFitWebsite.Models.User
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+<div class="content">
+    <h1>Details</h1>
+
+    <div>
+        <h4>User</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Isactive)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Isactive)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Balance)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Balance)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Imagepath)
+            </dt>
+            <dd class="col-sm-10">
+                <img src=@Url.Content("~/Images/" + Model.Imagepath) asp-append-version="true" style="border-radius:20%;" width="100" height="100" />
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Userid">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>

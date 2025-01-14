@@ -1,0 +1,65 @@
+﻿@model IEnumerable<StriveFitWebsite.Models.Testimonial>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+<div class="content">
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+        <a asp-action="ManageTestimonials" asp-controller="Testimonials">Manage Testimonials</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Content)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Submitteddate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rating)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Member)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Content)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Submitteddate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rating)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Member.Name)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Testimonialid">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Testimonialid">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Testimonialid">Delete</a>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,37 @@
+﻿@model StriveFitWebsite.Models.User
+
+@{
+    ViewData["Title"] = "Edit Profile";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+
+}
+
+<div class="content">
+
+    <h2>Edit Profile</h2>
+
+    <form asp-action="Update" asp-controller="Admin" method="post">
+        <div class="form-group">
+            <label for="Name">Name</label>
+            <input asp-for="Name" class="form-control" id="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <input asp-for="Email" class="form-control" id="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="col-lg-6">
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label">Profile Picture</label>
+                <input asp-for="ImageFile" type="file" class="form-control" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <input asp-for="Userid" type="hidden" />
+
+            </div>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
