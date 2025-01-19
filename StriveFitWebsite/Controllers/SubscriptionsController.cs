@@ -2,10 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using iText.Kernel.Pdf;
+using iText.Layout.Properties;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StriveFitWebsite.Models;
+
+
+using System.IO;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
+using System.Net;
+using System.Net.Mail;
 
 namespace StriveFitWebsite.Controllers
 {
@@ -13,9 +22,11 @@ namespace StriveFitWebsite.Controllers
     {
         private readonly ModelContext _context;
 
-        public SubscriptionsController(ModelContext context)
+        private readonly IConfiguration _configuration;
+        public SubscriptionsController(ModelContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: Subscriptions
@@ -160,30 +171,30 @@ namespace StriveFitWebsite.Controllers
             {
                 _context.Subscriptions.Remove(subscription);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool SubscriptionExists(decimal id)
         {
-          return (_context.Subscriptions?.Any(e => e.Subscriptionid == id)).GetValueOrDefault();
+            return (_context.Subscriptions?.Any(e => e.Subscriptionid == id)).GetValueOrDefault();
         }
 
         public IActionResult CheckPlan(decimal price, string planname)
         {
-
+            QuestPDF.Settings.License = LicenseType.Community;
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null)
             {
-                return RedirectToAction("Login", "LoginAndRegister"); // Redirect to login if not logged in
+                return RedirectToAction("Login", "LoginAndRegister"); 
             }
 
-            // Retrieve the user from the database
+            
             var user = _context.Users.SingleOrDefault(u => u.Userid == userId);
             if (user == null)
             {
-                return RedirectToAction("Login", "LoginAndRegister"); // Redirect to login if user record not found
+                return RedirectToAction("Login", "LoginAndRegister"); 
             }
 
             var activeSubscription = _context.Subscriptions
@@ -192,27 +203,27 @@ namespace StriveFitWebsite.Controllers
             if (activeSubscription != null)
             {
                 TempData["Message"] = "You cannot choose another subscription until your current subscription ends.";
-                return RedirectToAction("Index", "Home"); 
+                return RedirectToAction("Index", "Home");
             }
 
-            // Check if balance is sufficient
+            
             if (user.Balance == null || user.Balance < price)
             {
                 TempData["Message"] = "You do not have enough balance to subscribe to this plan.";
-                return RedirectToAction("Index", "Home"); // Redirect to the price plan page
+                return RedirectToAction("Index", "Home"); 
             }
 
-            // Deduct balance and add to subscription
+            
             user.Balance -= price;
             var plan = _context.Membershipplans
-                    .AsEnumerable() // Switch to in-memory evaluation
+                    .AsEnumerable() 
                     .SingleOrDefault(p => p.Planname.Trim().Equals(planname.Trim(), StringComparison.OrdinalIgnoreCase)); if (plan == null)
             {
                 TempData["Message"] = "The selected plan does not exist.";
-                return RedirectToAction("Index", "Home"); // Redirect if plan is not found
+                return RedirectToAction("Index", "Home"); 
             }
 
-            // Create and save the subscription
+            
             var subscription = new Subscription
             {
                 Userid = user.Userid,
@@ -222,9 +233,8 @@ namespace StriveFitWebsite.Controllers
                 Paymentstatus = "Paid",
                 Renewalstatus = "Active"
             };
-            
 
-            _context.Subscriptions.Add(subscription);           
+            _context.Subscriptions.Add(subscription);
             _context.SaveChanges();
 
             var payment = new Payment
@@ -232,15 +242,78 @@ namespace StriveFitWebsite.Controllers
                 Subscriptionid = subscription.Subscriptionid,
                 Amount = plan.Price,
                 Paymentdate = DateTime.Now,
-                Paymentmethod = "Paypal", 
+                Paymentmethod = "Paypal",
                 Paymentstatus = "Completed"
             };
 
             _context.Payments.Add(payment);
             _context.SaveChanges();
 
+            if (payment.Paymentstatus == "Completed")
+            {
+                string content = $"Dear {user.Name},\n\n" +
+                    $"Your payment has been successfully completed for the {subscription.Plan.Planname} subscription on StriveFit.\n\n" +
+                    "Thank you for choosing us!\n\n" +
+                    "Best Regards,\nStriveFit Team";
+
+                
+                var document = Document.Create(container =>
+                {
+                    container.Page(page =>
+                    {
+                        page.Margin(50);
+                        page.Content().Column(column =>
+                        {
+                            column.Item().Text("Payment Confirmation").FontSize(20).Bold().AlignCenter();
+                            column.Item().Text(content).FontSize(12);
+                        });
+                    });
+                });
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    document.GeneratePdf(memoryStream);
+                    var pdfBytes = memoryStream.ToArray();
+
+                    var smtpServer = _configuration["EmailSettings:SMTPServer"];
+                    var smtpPort = int.Parse(_configuration["EmailSettings:SMTPPort"]);
+                    var senderEmail = _configuration["EmailSettings:SenderEmail"];
+                    var senderPassword = _configuration["EmailSettings:SenderPassword"];
+                    try
+                    {
+                        using (var smtpClient = new SmtpClient(smtpServer, smtpPort))
+                    {
+                        smtpClient.Credentials = new NetworkCredential(senderEmail, senderPassword);
+                        smtpClient.EnableSsl = true;
+
+                        var mailMessage = new MailMessage
+                        {
+                            From = new MailAddress(senderEmail),
+                            Subject = "Payment Confirmation",
+                            Body = $"Dear {user.Name},\n\nYour payment for {subscription.Plan.Planname} has been confirmed.\n\nBest Regards,\nStriveFit Team",
+                            IsBodyHtml = false
+                        };
+
+                        mailMessage.To.Add(user.Email);
+                        mailMessage.Attachments.Add(new Attachment(new MemoryStream(pdfBytes), "PaymentConfirmation.pdf"));
+
+                        smtpClient.Send(mailMessage);
+
+                    }
+                }
+                    catch (Exception ex)
+                    {
+                    TempData["Message"] = $"Payment successful, but the email could not be sent. Error: {ex.Message}";
+                }
+                TempData["Message"] = "Payment completed and confirmation email sent.";
+                    return File(pdfBytes, "application/pdf", "PaymentConfirmation.pdf");
+                }
+
+                
+            }
             TempData["Message"] = "You have successfully subscribed to the plan.";
-            return RedirectToAction("Index", "Home"); // Redirect back to the price plan page
+            return RedirectToAction("Index", "Home");
         }
+
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StriveFitWebsite.Models;
+using StriveFitWebsite.Models.ViewModels;
 
 namespace StriveFitWebsite.Controllers
 {
@@ -58,12 +59,23 @@ namespace StriveFitWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Loginid,Username,Passwordhash,Roleid,Userid,Lastlogin,Isactive")] Userlogin userlogin)
+        public async Task<IActionResult> Create(UsersLoginViewModel userlogin)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == userlogin.Username);
             if (ModelState.IsValid)
             {
-                
-                _context.Add(userlogin);
+                var logins = new Userlogin
+                {
+                    Username = userlogin.Username,
+                    Passwordhash = userlogin.Passwordhash,
+                    Roleid = userlogin.Roleid,
+                    Userid =  user.Userid,
+                    Lastlogin = userlogin.Lastlogin,
+                    Isactive = userlogin.Isactive
+                };
+
+
+                _context.Add(logins);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -73,7 +85,7 @@ namespace StriveFitWebsite.Controllers
         }
 
         // GET: Userlogins/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(decimal id)
         {
             if (id == null || _context.Userlogins == null)
             {
@@ -85,9 +97,19 @@ namespace StriveFitWebsite.Controllers
             {
                 return NotFound();
             }
-            ViewData["Roleid"] = new SelectList(_context.Roles, "Roleid", "Roleid", userlogin.Roleid);
-            ViewData["Userid"] = new SelectList(_context.Users, "Userid", "Userid", userlogin.Userid);
-            return View(userlogin);
+
+            var viewModel = new UsersLoginViewModel
+            {
+                Username = userlogin.Username,
+                Passwordhash = userlogin.Passwordhash,
+                Roleid = userlogin.Roleid,
+                Userid = userlogin.Userid,
+                Lastlogin = userlogin.Lastlogin,
+                Isactive = userlogin.Isactive
+            };
+
+            ViewData["Roleid"] = new SelectList(_context.Roles, "Roleid", "Roleid", viewModel.Roleid);
+            return View(viewModel);
         }
 
         // POST: Userlogins/Edit/5
@@ -95,23 +117,34 @@ namespace StriveFitWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Loginid,Username,Passwordhash,Roleid,Userid,Lastlogin,Isactive")] Userlogin userlogin)
+        public async Task<IActionResult> Edit(decimal id, UsersLoginViewModel userlogin)
         {
-            if (id != userlogin.Loginid)
-            {
-                return NotFound();
-            }
+           
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(userlogin);
+                    var logins = await _context.Userlogins.FindAsync(id);
+                    if (logins == null)
+                    {
+                        return NotFound();
+                    }
+
+                    logins.Username = userlogin.Username;
+                    logins.Passwordhash = userlogin.Passwordhash;
+                    logins.Roleid = userlogin.Roleid;
+                    logins.Userid = userlogin.Userid;
+                    logins.Lastlogin = userlogin.Lastlogin;
+                    logins.Isactive = userlogin.Isactive;
+
+                    _context.Update(logins);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserloginExists(userlogin.Loginid))
+                    if (!UserloginExists(id))
                     {
                         return NotFound();
                     }
@@ -120,10 +153,9 @@ namespace StriveFitWebsite.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
             ViewData["Roleid"] = new SelectList(_context.Roles, "Roleid", "Roleid", userlogin.Roleid);
-            ViewData["Userid"] = new SelectList(_context.Users, "Userid", "Userid", userlogin.Userid);
             return View(userlogin);
         }
 

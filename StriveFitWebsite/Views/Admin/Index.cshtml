@@ -56,7 +56,6 @@
                         <h6 class="mb-0">Monthly Subscriptions</h6>
                     </div>
                     <canvas id="monthly-subscriptions"></canvas>
-                    <!-- Display monthly subscription data as text -->
                     <div class="text-start mt-3">
                         <p><strong>Total Monthly Subscriptions:</strong></p>
                         <ul>
@@ -76,7 +75,6 @@
                         <h6 class="mb-0">Annual Subscriptions</h6>
                     </div>
                     <canvas id="annualChart"></canvas>
-                    <!-- Display annual subscription data as text -->
                     <div class="text-start mt-3">
                         <p><strong>Total Annual Subscriptions:</strong></p>
                         <ul>
@@ -201,7 +199,6 @@
 
     const annualCtx = document.getElementById('annualChart').getContext('2d');
 
-    // Get data from ViewBag
     const years = @Html.Raw(Json.Serialize(ViewBag.Years));
     const annualCounts = @Html.Raw(Json.Serialize(ViewBag.AnnualCounts));
 
@@ -226,7 +223,6 @@
         }
     });
 
-    //click on search button
     $(document).ready(function () {
           $('#searchButton').on('click', function () {
               var startDate = $('#startDate').val();
@@ -240,9 +236,8 @@
                       endDate: endDate
                   },
                   success: function (response) {
-                      // Update the table and charts with the new data
                       $('#subscriptionsTableContainer').html(response);
-                      updateCharts(); // Function to update charts (we'll define it next)
+                      updateCharts(); 
                   },
                   error: function () {
                       alert('Error searching subscriptions');

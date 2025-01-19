@@ -19,12 +19,26 @@ namespace StriveFitWebsite.Controllers
         }
 
         // GET: Schedules
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
-            var modelContext = _context.Schedules.Include(s => s.Trainer).Include(s => s.Training);
-            return View(await modelContext.ToListAsync());
+
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            if (!userId.HasValue)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var schedules = _context.Schedules
+                .Include(s => s.Trainer)
+                .Include(s => s.Training)
+                .Where(s => s.Trainerid == userId.Value)
+                .ToList();
+
+            return View(schedules);  
         }
+
 
         // GET: Schedules/Details/5
         public async Task<IActionResult> Details(decimal? id)
@@ -106,7 +120,7 @@ namespace StriveFitWebsite.Controllers
                     Lectuerstime = form.Lectuerstime,
                     Exercisroutine = form.Exercisroutine,
                     Classtype = form.Classtype,
-                    Trainingid = form.Trainingid, // Assign Trainingid from form
+                    Trainingid = form.Trainingid, 
                     Schedulestatus = "Approved"
                 };
 
@@ -115,7 +129,6 @@ namespace StriveFitWebsite.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Repopulate dropdowns for re-rendering the form on error
             ViewBag.Trainingid = new SelectList(
                 _context.Trainingtypes.Select(t => new { Trainingtypeid = (decimal)t.Trainingtypeid, t.Trainingtypename }),
                 "Trainingtypeid",
@@ -156,7 +169,6 @@ namespace StriveFitWebsite.Controllers
         {
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
 
-            // Fetch the existing Schedule entity from the database
             var schedule = await _context.Schedules.FindAsync(id);
             if (schedule == null)
             {
@@ -167,7 +179,6 @@ namespace StriveFitWebsite.Controllers
             {
                 try
                 {
-                    // Map properties from ScheduleForm to Schedule entity
                     schedule.Starttime = scheduleForm.Starttime;
                     schedule.Endtime = scheduleForm.Endtime;
                     schedule.Capacity = scheduleForm.Capacity;
@@ -177,7 +188,6 @@ namespace StriveFitWebsite.Controllers
                     schedule.Classtype = scheduleForm.Classtype;
                     schedule.Trainingid = scheduleForm.Trainingid;
 
-                    // Save changes to the database
                     _context.Update(schedule);
                     await _context.SaveChangesAsync();
                 }
@@ -246,26 +256,28 @@ namespace StriveFitWebsite.Controllers
           return (_context.Schedules?.Any(e => e.Scheduleid == id)).GetValueOrDefault();
         }
 
-
-        public IActionResult MemberSchedule()
+        public async Task<IActionResult> EnrolledMembers(decimal id)
         {
-            var userId = HttpContext.Session.GetInt32("UserId");
-            if (!userId.HasValue)
+            ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
+
+            var schedule = await _context.Schedules
+                .Include(s => s.Trainer)
+                .Include(s => s.Training)
+                .FirstOrDefaultAsync(m => m.Scheduleid == id);
+
+            if (schedule == null)
             {
-                return RedirectToAction("Login", "Account");
+                return NotFound();
             }
 
-            
-            var schedules = _context.Schedules
-                 .Include(s => s.Trainer) 
-                 .Include(s => s.Training) 
-                 .Where(s => s.Trainerid == userId.Value) 
-                 .ToList();
+            var enrolledMembers = _context.Users.Where(e => e.Userid == id).ToList();
 
-            return View(schedules);
+            return View(enrolledMembers);
         }
 
        
+
+
 
     }
 }

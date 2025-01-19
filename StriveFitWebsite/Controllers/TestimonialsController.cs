@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StriveFitWebsite.Models;
+using StriveFitWebsite.Models.ViewModels;
 
 namespace StriveFitWebsite.Controllers
 {
@@ -56,33 +57,52 @@ namespace StriveFitWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Testimonialid,Memberid,Content,Status,Submitteddate,Rating")] Testimonial testimonial)
+        public async Task<IActionResult> Create(TestimonialsViewModel viewModel)
         {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == viewModel.Username);
             if (ModelState.IsValid)
             {
+                var testimonial = new Testimonial
+                {
+                    Testimonialid = viewModel.Testimonialid,
+                    Memberid = user.Userid, 
+                    Content = viewModel.Content,
+                    Status = viewModel.Status,
+                    Submitteddate = DateTime.Now,
+                    Rating = viewModel.Rating
+                };
                 _context.Add(testimonial);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Memberid"] = new SelectList(_context.Users, "Userid", "Userid", testimonial.Memberid);
-            return View(testimonial);
+            return View(viewModel);
         }
 
         // GET: Testimonials/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
-            if (id == null || _context.Testimonials == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var testimonial = await _context.Testimonials.FindAsync(id);
+            var testimonial = await _context.Testimonials.Include(t => t.Member).FirstOrDefaultAsync(t => t.Testimonialid == id);
             if (testimonial == null)
             {
                 return NotFound();
             }
-            ViewData["Memberid"] = new SelectList(_context.Users, "Userid", "Userid", testimonial.Memberid);
-            return View(testimonial);
+
+            var viewModel = new TestimonialsViewModel
+            {
+                Testimonialid = testimonial.Testimonialid,
+                Username = testimonial.Member.Name, 
+                Content = testimonial.Content,
+                Status = testimonial.Status,
+                Submitteddate = testimonial.Submitteddate,
+                Rating = testimonial.Rating
+            };
+
+            return View(viewModel);
         }
 
         // POST: Testimonials/Edit/5
@@ -90,9 +110,9 @@ namespace StriveFitWebsite.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Testimonialid,Memberid,Content,Status,Submitteddate,Rating")] Testimonial testimonial)
+        public async Task<IActionResult> Edit(decimal id, TestimonialsViewModel viewModel)
         {
-            if (id != testimonial.Testimonialid)
+            if (id != viewModel.Testimonialid)
             {
                 return NotFound();
             }
@@ -101,12 +121,31 @@ namespace StriveFitWebsite.Controllers
             {
                 try
                 {
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Name == viewModel.Username);
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("Username", "User not found.");
+                        return View(viewModel);
+                    }
+
+                    var testimonial = await _context.Testimonials.FindAsync(id);
+                    if (testimonial == null)
+                    {
+                        return NotFound();
+                    }
+
+                    testimonial.Memberid = user.Userid; 
+                    testimonial.Content = viewModel.Content;
+                    testimonial.Status = viewModel.Status;
+                    testimonial.Submitteddate = viewModel.Submitteddate;
+                    testimonial.Rating = viewModel.Rating;
+
                     _context.Update(testimonial);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TestimonialExists(testimonial.Testimonialid))
+                    if (!TestimonialExists(viewModel.Testimonialid))
                     {
                         return NotFound();
                     }
@@ -117,8 +156,8 @@ namespace StriveFitWebsite.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Memberid"] = new SelectList(_context.Users, "Userid", "Userid", testimonial.Memberid);
-            return View(testimonial);
+
+            return View(viewModel);
         }
 
         // GET: Testimonials/Delete/5
@@ -179,7 +218,7 @@ namespace StriveFitWebsite.Controllers
                 Content = Content,
                 Submitteddate = DateTime.Now,
                 Status = "Pending",
-                Rating = Rating  // Save the Rating from the form
+                Rating = Rating  
             };
 
             _context.Testimonials.Add(testimonial);
@@ -195,11 +234,11 @@ namespace StriveFitWebsite.Controllers
             var testimonial = _context.Testimonials.Find(testimonialId);
             if (testimonial != null)
             {
-                testimonial.Status = "Approved"; // Change the status to "Approved"
+                testimonial.Status = "Approved"; 
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("ManageTestimonials"); // Redirect to a page where all testimonials are listed
+            return RedirectToAction("ManageTestimonials"); 
         }
 
         [HttpPost]
@@ -208,11 +247,11 @@ namespace StriveFitWebsite.Controllers
             var testimonial = _context.Testimonials.Find(testimonialId);
             if (testimonial != null)
             {
-                testimonial.Status = "Rejected"; // Change the status to "Rejected"
+                testimonial.Status = "Rejected"; 
                 _context.SaveChanges();
             }
 
-            return RedirectToAction("ManageTestimonials"); // Redirect to a page where all testimonials are listed
+            return RedirectToAction("ManageTestimonials"); 
         }
 
         public IActionResult ManageTestimonials()

@@ -54,13 +54,13 @@
                     <td>@Html.DisplayFor(modelItem => item.Goal)</td>
                     <td>@Html.DisplayFor(modelItem => item.Lectuerstime)</td>
                     <td>@Html.DisplayFor(modelItem => item.Exercisroutine)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Classtype)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Classtype)</td> 
                     <td>@Html.DisplayFor(modelItem => item.Trainer.Name)</td>
                     <td>@Html.DisplayFor(modelItem => item.Training.Trainingtypename)</td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Scheduleid" >Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Scheduleid" >Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Scheduleid" >Delete</a>
+                        <a asp-action="Edit" asp-route-id="@item.Scheduleid" style="color: orangered;" >Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Scheduleid" style="color: orangered;">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Scheduleid" style="color: orangered;">Delete</a>
                     </td>
                 </tr>
             }

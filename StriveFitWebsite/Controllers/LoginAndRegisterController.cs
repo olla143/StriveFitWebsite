@@ -39,6 +39,7 @@ namespace StriveFitWebsite.Controllers
                 }
 
                 users.Imagepath = fileName;
+                users.Balance = 900;
 
                 _context.Add(users);
                 await _context.SaveChangesAsync();

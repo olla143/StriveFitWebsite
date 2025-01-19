@@ -20,9 +20,11 @@ namespace StriveFitWebsite.Controllers
             ViewBag.AdminName = HttpContext.Session.GetString("AdminName");
 
             decimal adminRoleId = 1; 
-            decimal trainerRoleId = 2; 
+            decimal trainerRoleId = 2;
 
-            // Count the number of users who are members (not admins or trainers)
+            var user = _context.Users.FirstOrDefault(u => u.Userid == 1);
+            ViewBag.AdminImage = "~/Images/" + user.Imagepath;
+
             var memberCount = _context.Userlogins
                                      .Where(ul => ul.Roleid != adminRoleId && ul.Roleid != trainerRoleId)
                                      .Count();
@@ -168,8 +170,7 @@ namespace StriveFitWebsite.Controllers
                 }
 
                 existingUser.Imagepath = fileName;
-                _context.Update(existingUser);
-            await _context.SaveChangesAsync();
+                
             }
 
             _context.Update(existingUser);
@@ -186,7 +187,6 @@ namespace StriveFitWebsite.Controllers
                 .Include(s => s.Plan)
                 .AsQueryable();
 
-            // Apply the date filtering logic
             if (startDate != null)
             {
                 allSubscriptions = allSubscriptions.Where(s => s.Startdate >= startDate);
@@ -198,7 +198,6 @@ namespace StriveFitWebsite.Controllers
 
             var subscriptions = allSubscriptions.ToList();
 
-            // Ensure ViewBag is populated before returning the view
             ViewBag.Months = subscriptions
                 .GroupBy(s => s.Startdate.Month)
                 .Select(g => g.Key.ToString())
@@ -219,7 +218,6 @@ namespace StriveFitWebsite.Controllers
                 .Select(g => g.Count())
                 .ToList();
 
-            // Returning partial view
             return PartialView("_SubscriptionsPartial", subscriptions);
         }
 
@@ -230,12 +228,12 @@ namespace StriveFitWebsite.Controllers
                 .Include(s => s.User)
                 .Include(s => s.Plan)
                 .Include(s => s.User.Schedules)
-                .ThenInclude(s => s.Trainer) // Include the Trainer related to each Schedule
-                .Include(s => s.User.WorkoutplanMembers) // Include the user's workout plans
+                .ThenInclude(s => s.Trainer) 
+                .Include(s => s.User.WorkoutplanMembers) 
                 .Select(s => new
                 {
-                    MemberName = s.User.Name, // Member's name
-                    // Get the trainer's name from the schedule that the user has joined via Workoutplan
+                    MemberName = s.User.Name, 
+                    
                     TrainerName = s.User.WorkoutplanMembers
                                     .FirstOrDefault(wp => wp.Scheduleid.HasValue) != null
                                     ? s.User.WorkoutplanMembers
@@ -243,15 +241,14 @@ namespace StriveFitWebsite.Controllers
                                         .Schedule
                                         .Trainer
                                         .Name
-                                    : null, // Handle null case if no matching Workoutplan exists
-                    PlanName = s.Plan.Planname, // Plan name
-                    Balance = s.User.Balance, // Member's balance
-                    StartDate = s.Startdate, // Subscription start date
-                    EndDate = s.Enddate // Subscription end date
+                                    : null, 
+                    PlanName = s.Plan.Planname, 
+                    Balance = s.User.Balance, 
+                    StartDate = s.Startdate,
+                    EndDate = s.Enddate 
                 })
                 .ToList();
 
-            // Count the number of users who are members (not admins or trainers)
             var memberCount = _context.Userlogins
                                      .Where(ul => ul.Roleid != 1)
                                      .Count();                 
@@ -261,7 +258,7 @@ namespace StriveFitWebsite.Controllers
                 .Count();
 
             var enrolledUsers = subscriptionDetails
-                .Where(s => s.TrainerName != null) // Count users enrolled in a schedule (users with a trainer)
+                .Where(s => s.TrainerName != null) 
                 .Count();
 
             var totalRevenue = _context.Payments

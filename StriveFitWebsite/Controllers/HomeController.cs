@@ -23,7 +23,9 @@ namespace StriveFitWebsite.Controllers
 
         public IActionResult Index()
         {
+            
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
+            
             var homeContent = _context.Homepages.ToList();
             var plan = _context.Membershipplans.ToList();
             var viewModel = new HomePageViewModel
@@ -33,7 +35,26 @@ namespace StriveFitWebsite.Controllers
                 .ToList()
             };
 
-            return View(viewModel);
+            if (ViewBag.IsLoggedIn)
+            {
+                decimal userId = Convert.ToDecimal(HttpContext.Session.GetInt32("UserId"));
+
+                var user = _context.Users.FirstOrDefault(u => u.Userid == userId);
+
+                if (user != null)
+                {
+                    ViewBag.UserBalance = user.Balance;
+
+                    var latestPaymentDate = _context.Payments
+                                                    .Where(p => p.Subscription.Userid == userId)
+                                                    .OrderByDescending(p => p.Paymentdate)
+                                                    .Select(p => p.Paymentdate)
+                                                    .FirstOrDefault();
+                    ViewBag.LatestPaymentDate = latestPaymentDate;
+                }
+            }
+
+                return View(viewModel);
         }
 
         public IActionResult Privacy()
@@ -46,7 +67,6 @@ namespace StriveFitWebsite.Controllers
 
             var aboutUsContent = _context.Aboutuspages.ToList();
 
-            // Fetch testimonials
             var testimonials = _context.Testimonials
                 .Include(t => t.Member)
                 .ToList();
@@ -54,7 +74,7 @@ namespace StriveFitWebsite.Controllers
 
             var trainers = _context.Userlogins
                .Include(u => u.User)
-               .Where(u => u.Role.Rolename == "Trainer") // Adjust RoleName to match your database value
+               .Where(u => u.Role.Rolename == "Trainer") 
                .Select(u => new
                {
                    u.User.Name,
@@ -62,7 +82,6 @@ namespace StriveFitWebsite.Controllers
                })
                .ToList();
 
-            // Combine into ViewModel
             var viewModel = new AboutPageViewModel
             {
                 AboutusPage = aboutUsContent,
@@ -99,7 +118,6 @@ namespace StriveFitWebsite.Controllers
             var userId = HttpContext.Session.GetInt32("UserId");
             if (!userId.HasValue)
             {
-                // Redirect to login if user is not logged in
                 return RedirectToAction("Login", "LoginAndRegister");
             }
 
@@ -108,13 +126,11 @@ namespace StriveFitWebsite.Controllers
 
             if (user == null)
             {
-                // Handle case where user doesn't exist
                 return RedirectToAction("Index", "Home");
             }
 
             if (user.Role.Rolename == "Trainer")
             {
-                // Trainer: Allow them to create a schedule
                 return RedirectToAction("Index", "Schedules");
             }
             else if (user.Role.Rolename == "Member")
@@ -131,7 +147,6 @@ namespace StriveFitWebsite.Controllers
                         TrainerName = s.Trainer.Name 
                         })
                         .ToList();
-                // Member: Optionally show a message or redirect them to another page
                 return View(schedules);
             }
 
@@ -151,7 +166,6 @@ namespace StriveFitWebsite.Controllers
         {
             ViewBag.Profile = HttpContext.Session.GetString("MemberName");
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
-            // Check if the session is active
             var userId = HttpContext.Session.GetInt32("UserId");
 
             if (userId == null)
@@ -159,7 +173,6 @@ namespace StriveFitWebsite.Controllers
                 return RedirectToAction("Login", "LoginAndRegister");
             }
 
-            // Retrieve user information
             var user = _context.Users
                 .Where(u => u.Userid == userId)
                 .SingleOrDefault();
@@ -169,7 +182,7 @@ namespace StriveFitWebsite.Controllers
                 return RedirectToAction("Login", "LoginAndRegister");
             }
 
-            return View(user); // Pass the user data to the Profile view
+            return View(user);
 
         }
 
@@ -177,14 +190,12 @@ namespace StriveFitWebsite.Controllers
         public IActionResult Edit(decimal id)
         {
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
-            // Check if the user is logged in
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null || userId != id)
             {
                 return RedirectToAction("Login", "LoginAndRegister");
             }
 
-            // Retrieve user information for editing
             var user = _context.Users
                 .Where(u => u.Userid == id)
                 .SingleOrDefault();
@@ -194,7 +205,7 @@ namespace StriveFitWebsite.Controllers
                 return RedirectToAction("Login", "LoginAndRegister");
             }
 
-            return View(user); // Pass the user data to the Edit view
+            return View(user); 
         }
 
 
@@ -204,14 +215,12 @@ namespace StriveFitWebsite.Controllers
         {
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
 
-            // Check if the user is logged in
             var userId = HttpContext.Session.GetInt32("UserId");
             if (userId == null || userId != user.Userid)
             {
                 return RedirectToAction("Login", "LoginAndRegister");
             }
 
-            // Find the user in the database
             var existingUser = _context.Users
                 .Where(u => u.Userid == user.Userid)
                 .SingleOrDefault();
@@ -221,38 +230,29 @@ namespace StriveFitWebsite.Controllers
                 return RedirectToAction("Login", "LoginAndRegister");
             }
 
-            // Update user data
             existingUser.Name = user.Name;
             existingUser.Email = user.Email;
             existingUser.Balance = user.Balance;
 
-            // Check if the user uploaded a new image
             if (user.ImageFile != null)
             {
-                // Get the path to the web root (wwwroot)
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
 
-                // Create a unique file name for the uploaded image
                 string fileName = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
 
-                // Combine the file name with the path to the Images folder
                 string path = Path.Combine(wwwRootPath + "/Images/", fileName);
 
-                // Save the uploaded file to the server
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     await user.ImageFile.CopyToAsync(fileStream);
                 }
 
-                // Update the user's image path in the database
                 existingUser.Imagepath = fileName;
             }
 
-            // Save the changes to the database
             _context.Update(existingUser);
             await _context.SaveChangesAsync();
 
-            // Redirect to the profile page after the update
             return RedirectToAction("Profile");
         }
 

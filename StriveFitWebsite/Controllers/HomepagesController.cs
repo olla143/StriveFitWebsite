@@ -125,20 +125,17 @@ namespace StriveFitWebsite.Controllers
             {
                 try
                 {
-                    // Check if a new image file has been uploaded
                     if (homepage.ImageFile != null)
                     {
-                        // Delete the old image if a new one is uploaded (optional step)
                         if (!string.IsNullOrEmpty(homepage.Imageurl))
                         {
                             string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath + "/Images/", homepage.Imageurl);
                             if (System.IO.File.Exists(oldImagePath))
                             {
-                                System.IO.File.Delete(oldImagePath); // Delete the old image
+                                System.IO.File.Delete(oldImagePath); 
                             }
                         }
 
-                        // Save the new image
                         string wwwRootPath = _webHostEnvironment.WebRootPath;
                         string fileName = Guid.NewGuid().ToString() + "_" + homepage.ImageFile.FileName;
                         string path = Path.Combine(wwwRootPath + "/Images/", fileName);
@@ -146,7 +143,7 @@ namespace StriveFitWebsite.Controllers
                         {
                             await homepage.ImageFile.CopyToAsync(fileStream);
                         }
-                        homepage.Imageurl = fileName; // Update the Imageurl with the new image name
+                        homepage.Imageurl = fileName; 
                     }
 
                     _context.Update(homepage);

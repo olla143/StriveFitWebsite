@@ -17,5 +17,5 @@ public partial class Payment
 
     public string? Paymentstatus { get; set; }
 
-    public virtual Subscription Subscription { get; set; } = null!;
+    public virtual Subscription? Subscription { get; set; }
 }
