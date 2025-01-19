@@ -135,18 +135,25 @@ namespace StriveFitWebsite.Controllers
             }
             else if (user.Role.Rolename == "Member")
             {
+                var workoutPlans = _context.Workoutplans
+                    .Where(w => w.Memberid == userId.Value)
+                    .Select(w => w.Scheduleid)
+                    .ToHashSet(); 
+
                 var schedules = _context.Schedules
-                    .Include(s => s.Trainer)  
+                    .Include(s => s.Trainer)
                     .Select(s => new ScheduleViewModel
                     {
                         ScheduleId = s.Scheduleid,
                         Starttime = s.Starttime,
                         Endtime = s.Endtime,
                         Classtype = s.Classtype,
-                        Exercisroutine = s.Exercisroutine,                        
-                        TrainerName = s.Trainer.Name 
-                        })
-                        .ToList();
+                        Exercisroutine = s.Exercisroutine,
+                        TrainerName = s.Trainer.Name,
+                        IsEnrolled = workoutPlans.Contains(s.Scheduleid) 
+                    })
+                    .ToList();
+
                 return View(schedules);
             }
 

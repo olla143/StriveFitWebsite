@@ -30,8 +30,8 @@
 	<link rel="stylesheet" type="text/css" href="~/LoginAndRegisterDesign/css/util.css">
 	<link rel="stylesheet" type="text/css" href="~/LoginAndRegisterDesign/css/main.css">
 	<!--===============================================================================================-->
-	<link rel="stylesheet" href="https://fontawesome.com/v4/icon/envelope">
-	
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -53,9 +53,10 @@
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Enter Email">
-						<input name="Email" class="input100" type="email" placeholder="Email">
-						<span class="focus-input100" data-placeholder="&#xf0e0;"></span>
+						<input name="Email" class="input1000" type="email" placeholder="Email">
+						<span class="focus-input1000"><i class="fas fa-envelope"></i></span>
 					</div>
+
 
 
 					<div class="wrap-input100 validate-input" data-validate="Enter password">
@@ -64,7 +65,7 @@
 					</div>
 
 					<div class="wrap-input100 validate-input" data-validate="Upload an image">
-						<label asp-for="ImageFile" class="control-label">Upload Image</label>
+						<label asp-for="ImageFile" class="control-label" style="color:white">Upload Image</label>
 						<input asp-for="ImageFile" type="file" class="input100" />
 						<span asp-validation-for="ImageFile" class="focus-input100 text-danger"></span>
 					</div>
@@ -95,7 +96,46 @@
 
 
 	<div id="dropDownSelect1"></div>
+	<style>
+		.wrap-input100 {
+			position: relative;
+			margin-bottom: 20px;
+		}
 
+		.focus-input1000 {
+			position: absolute;
+			top: 50%;
+			left: 10px;
+			transform: translateY(-50%);
+			transition: all 0.3s ease;
+			font-size: 18px;
+			color:white
+		}
+
+		.input1000:focus ~ .focus-input1000,
+		.input1000:not(:placeholder-shown) ~ .focus-input1000 {
+			top: -10px;
+			font-size: 15px; 
+			color: white; 
+		}
+
+		.input1000 {
+			width: 100%;
+			padding: 10px 10px 10px 40px; 
+			border: none;
+			border-bottom: 1px solid #ccc;
+			background: transparent;
+			outline: none;
+			font-size: 16px;
+			color: #000;
+		}
+
+			.input1000::placeholder {
+				color: transparent ; 
+			}
+
+		}
+	</style>
 	<!--===============================================================================================-->
 	<script src="~/LoginAndRegisterDesign/vendor/jquery/jquery-3.2.1.min.js"></script>
 	<!--===============================================================================================-->

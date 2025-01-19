@@ -2,8 +2,10 @@
 
 @{
     ViewData["Title"] = "Details";
-}
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
 
+}
+<div class="content">
 <h1>Details</h1>
 
 <div>
@@ -51,4 +53,5 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Messageid">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div>
 </div>

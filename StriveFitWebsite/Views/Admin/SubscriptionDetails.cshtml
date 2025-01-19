@@ -92,14 +92,55 @@
             $('#example').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
-                    'copyHtml5',
-                    'excelHtml5',
-                    'csvHtml5',
-                    'pdfHtml5'
+                    {
+                        extend: 'copyHtml5',
+                        text: 'Copy',
+                        messageTop: `
+                            Statistics:
+                            Total Users: ${@ViewBag.TotalUsers}
+                            Members Enrolled in Schedule: ${@ViewBag.EnrolledUsers}
+                            Total Revenue: ${@ViewBag.TotalRevenue}
+                            Number of Active Subscriptions: ${@ViewBag.ActiveSubscription}
+                        `
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        messageTop: `
+                            Statistics:
+                            Total Users: ${@ViewBag.TotalUsers}
+                            Members Enrolled in Schedule: ${@ViewBag.EnrolledUsers}
+                            Total Revenue: ${@ViewBag.TotalRevenue}
+                            Number of Active Subscriptions: ${@ViewBag.ActiveSubscription}
+                        `
+                    },
+                    {
+                        extend: 'csvHtml5',
+                        text: 'CSV',
+                        messageTop: `
+                            Statistics:
+                            Total Users: ${@ViewBag.TotalUsers}
+                            Members Enrolled in Schedule: ${@ViewBag.EnrolledUsers}
+                            Total Revenue: ${@ViewBag.TotalRevenue}
+                            Number of Active Subscriptions: ${@ViewBag.ActiveSubscription}
+                        `
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'PDF',
+                        messageTop: `
+                            Statistics:
+                            Total Users: ${@ViewBag.TotalUsers}
+                            Members Enrolled in Schedule: ${@ViewBag.EnrolledUsers}
+                            Total Revenue: ${@ViewBag.TotalRevenue}
+                            Number of Active Subscriptions: ${@ViewBag.ActiveSubscription}
+                        `
+                    }
                 ]
             });
         });
     </script>
+
 }
 
 

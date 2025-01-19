@@ -6,9 +6,10 @@
         public string TrainerName { get; set; }       
         public DateTime Starttime { get; set; }
         public DateTime Endtime { get; set; }
-        public string Classtype { get; set; }
+        public string? Classtype { get; set; }
 
-        public string Exercisroutine { get; set; }
-        
+        public string? Exercisroutine { get; set; }
+        public bool IsEnrolled { get; set; }
+
     }
 }

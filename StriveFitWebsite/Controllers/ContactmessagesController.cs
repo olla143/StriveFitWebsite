@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StriveFitWebsite.Models;
+using StriveFitWebsite.Models.ViewModels;
 
 namespace StriveFitWebsite.Controllers
 {
@@ -54,19 +55,30 @@ namespace StriveFitWebsite.Controllers
         // POST: Contactmessages/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Messageid,Userid,Username,Useremail,Message,Submissiondate,Status")] Contactmessage contactmessage)
+        public async Task<IActionResult> Create([Bind("Username,Useremail,Message")] Contactmessage contactmessage)
         {
             if (ModelState.IsValid)
             {
+                contactmessage.Submissiondate = DateTime.Now;
+                contactmessage.Status = "Pending"; // Default status
                 _context.Add(contactmessage);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                // Store the success message in TempData
+                TempData["SuccessMessage"] = "Your message has been sent and will be reviewed by the admin.";
+
+                // Redirect to the ContactUs action in HomeController
+                return RedirectToAction("Contact", "Home");
             }
-            ViewData["Userid"] = new SelectList(_context.Users, "Userid", "Userid", contactmessage.Userid);
-            return View(contactmessage);
+
+            // Handle invalid model state, redirect back to ContactUs
+            TempData["ErrorMessage"] = "Failed to send your message. Please try again.";
+            return RedirectToAction("Contact", "Home");
         }
+
 
         // GET: Contactmessages/Edit/5
         public async Task<IActionResult> Edit(decimal? id)

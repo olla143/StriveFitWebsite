@@ -46,10 +46,8 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         @if (Model != null)
                         {
-                           
                             foreach (var schedule in Model)
                             {
                                 <tr style="color: orangered;">
@@ -59,13 +57,18 @@
                                     <td>@schedule.Starttime.ToString()</td>
                                     <td>@schedule.Endtime.ToString()</td>
                                     <td>
-                                        <form asp-action="Enroll" asp-route-scheduleId="@schedule.ScheduleId" method="post">
-                                            <button type="submit" class="btn btn-secondary">Enroll</button>
-                                        </form>
+                                        @if (schedule.IsEnrolled)
+                                        {
+                                            <button class="btn btn-secondary" disabled>Enrolled</button>
+                                        }
+                                        else
+                                        {
+                                            <form asp-action="Enroll" asp-route-scheduleId="@schedule.ScheduleId" method="post">
+                                                <button type="submit" class="btn btn-secondary">Enroll</button>
+                                            </form>
+                                        }
                                     </td>
-                                    
                                 </tr>
-                               
                             }
                         }
                         else
@@ -74,6 +77,7 @@
                                 <td colspan="7" class="text-center">No schedules available</td>
                             </tr>
                         }
+
                         @if (TempData["Message"] != null)
                         {
                             <div class="alert alert-info">
@@ -81,6 +85,7 @@
                             </div>
                         }
                     </tbody>
+
                 </table>
             </div>
         </div>
