@@ -261,16 +261,18 @@ namespace StriveFitWebsite.Controllers
             ViewBag.IsLoggedIn = HttpContext.Session.GetString("UserId") != null;
 
             var schedule = await _context.Schedules
-                .Include(s => s.Trainer)
-                .Include(s => s.Training)
-                .FirstOrDefaultAsync(m => m.Scheduleid == id);
+        .Include(s => s.Trainer)
+        .Include(s => s.Training)
+        .Include(s => s.Workoutplans) // Include related workout plans
+            .ThenInclude(wp => wp.Member) // Include the users in workout plans
+        .FirstOrDefaultAsync(m => m.Scheduleid == id);
 
             if (schedule == null)
             {
                 return NotFound();
             }
 
-            var enrolledMembers = _context.Users.Where(e => e.Userid == id).ToList();
+            var enrolledMembers = schedule.Workoutplans.Select(wp => wp.Member).ToList();
 
             return View(enrolledMembers);
         }
